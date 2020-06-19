@@ -16,8 +16,9 @@ text = [
 ]
 cuisine = ['Pizza', 'Bar Food', 'Fast Food', 'Italian', 'Mexican', 'American', 'Sushi Bar', 'Vegetarian']
 
-# init x for latest use
-x = 0
+# get total documents count
+documents = db.reviews.count_documents({})
+
 for x in range(1, STOP):
     lorem_ipsum = {
         'name': names[randint(0, (len(names) - 1))] + ' ' + names[randint(0, (len(names) - 1))] + ': ' + text[
@@ -30,5 +31,6 @@ for x in range(1, STOP):
     result = db.reviews.insert_one(lorem_ipsum)
     # Print to the console the ObjectID of the new document
     print('Created {0} of 5000 as {1}'.format(x, result.inserted_id))
-# Step 5: Tell us that you are done
-print('finished creating {0} business reviews'.format(x))
+
+# Tell us that you are done
+print('finished creating {0} business reviews'.format(db.reviews.count_documents({}) - documents))

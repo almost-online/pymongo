@@ -33,11 +33,11 @@ text = [
 ]
 cuisine = ['Pizza', 'Bar Food', 'Fast Food', 'Italian', 'Mexican', 'American', 'Sushi Bar', 'Vegetarian']
 
-# init x for latest use
-x = 0
+# get total documents count
+documents = db.reviews.count_documents({})
 
 loop = asyncio.get_event_loop()
 loop.run_until_complete(asyncio.wait([write_data(x, db, names, text, cuisine) for x in range(1, STOP)]))
 
 # Tell us that you are done
-print('finished creating {0} business reviews'.format(x))
+print('finished creating {0} business reviews'.format(db.reviews.count_documents({}) - documents))
