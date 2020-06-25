@@ -1,12 +1,12 @@
 import asyncio
-from random import randint
 from sandbox.dbClient import client
-
-# Number of records to insert
-STOP = 5001
+from sandbox.dbClient import get_client
 
 # Get or create DB schema
 db = client.lorem_ipsum
+
+# Number of records to insert
+STOP = 5000
 
 # init x for latest use
 x = 0
@@ -15,14 +15,17 @@ record_id = random_record[0]["_id"]
 
 
 async def update_rating(x, id):
+    # Get or create DB schema
+    db_in = get_client().lorem_ipsum
+
     # Insert lorem_ipsum object directly into MongoDB via update_one
-    result = db.reviews.update_one({"_id": id}, {"$inc": {"rating": 1}})
+    result = db_in.reviews.update_one({"_id": id}, {"$inc": {"rating": 1}})
     # Print to the console the ObjectID of the new document
     print('Updated {0} of 5000 as {1}'.format(x, result.raw_result["n"]))
 
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(asyncio.wait([update_rating(x, record_id) for x in range(1, STOP)]))
+loop.run_until_complete(asyncio.wait([update_rating(x, record_id) for x in range(0, STOP)]))
 
 last_record = db.reviews.find_one({"_id": record_id})
 
