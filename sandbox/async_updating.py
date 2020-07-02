@@ -15,13 +15,15 @@ record_id = random_record[0]["_id"]
 
 
 async def update_rating(x, id):
-    # Get or create DB schema
-    db_in = get_client().lorem_ipsum
-
     # Insert lorem_ipsum object directly into MongoDB via update_one
-    result = db_in.reviews.update_one({"_id": id}, {"$inc": {"rating": 1}})
+    result = db.reviews.update_one({"_id": id},
+                                   {
+                                       "$inc": {"rating": 1},
+                                       "$currentDate": {"operation.date." + str(x): {"$type": "timestamp"}}
+                                   })
     # Print to the console the ObjectID of the new document
-    print('Updated {0} of 5000 as {1}'.format(x, result.raw_result["n"]))
+    print('Updated thread {0} of 5000 as +{1} (API call went through: {2})'.format(x, result.modified_count,
+                                                                                   result.acknowledged))
 
 
 loop = asyncio.get_event_loop()
@@ -31,3 +33,5 @@ last_record = db.reviews.find_one({"_id": record_id})
 
 # Tell us that you are done
 print('finished updating {0} times'.format(int(last_record["rating"]) - int(random_record[0]["rating"])))
+
+print('Final record', last_record)

@@ -1,12 +1,15 @@
 from random import randint
 from sandbox.dbClient import client
 import asyncio
+from timeit import timeit
 
 # Number of records to insert
-STOP = 5001
+STOP = 5000
 
 # Get or create DB schema
 db = client.lorem_ipsum
+
+timeit()
 
 
 async def write_data(x, db, names, text, cuisine):
@@ -37,7 +40,7 @@ cuisine = ['Pizza', 'Bar Food', 'Fast Food', 'Italian', 'Mexican', 'American', '
 documents = db.reviews.count_documents({})
 
 loop = asyncio.get_event_loop()
-loop.run_until_complete(asyncio.wait([write_data(x, db, names, text, cuisine) for x in range(1, STOP)]))
-
+loop.run_until_complete(asyncio.wait([write_data(x, db, names, text, cuisine) for x in range(0, STOP)]))
+timeit()
 # Tell us that you are done
 print('finished creating {0} business reviews'.format(db.reviews.count_documents({}) - documents))
